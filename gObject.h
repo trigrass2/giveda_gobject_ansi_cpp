@@ -37,34 +37,20 @@ typedef void (*T_pnrv)( GObject* );
 typedef void (*T_pirv)( GObject*p, int );
 
 /**
- * @def 定义一个函数类型名称为SlotFuncTypeName，函数名称为signalName的信号。
+ * @def 定义一个函数类型为SlotFuncTypeName，函数名称为signalName的信号。
  *
- * SlotFuncTypeName 信号函数的类型名称，比如T_pnrv
+ * SlotFuncTypeName 信号函数的类型，比如T_pnrv
  * signalName 信号名称
  */
 #define DEFINE_SIGNAL(SlotFuncTypeName, signalName) \
 public: SIGNAL_POINTER(SlotFuncTypeName) signalName() { return &m_##signalName; } \
 private: SIGNAL_TYPE(SlotFuncTypeName) m_##signalName;
 
-/**
- * @def 定义一个函数类型定义为SlotFuncType，函数类型名称为SlotFuncTypeName，函数名称为signalName的信号。
- *
- * SlotFuncType  信号函数的类型定义
- * SlotFuncTypeName 信号函数的类型名称，比如T_pnrv
- * signalName 信号名称
- */
 #define DEFINE_SIGNAL_EX(SlotFuncType, SlotFuncTypeName, signalName) \
 public: typedef SlotFuncType; \
 public: SIGNAL_POINTER(SlotFuncTypeName) signalName() { return &m_##signalName; } \
 private: SIGNAL_TYPE(SlotFuncTypeName) m_##signalName;
 
-/**
- * @def 发射一个函数类型名称为SlotFuncTypeName，函数名称为signalName的信号。可以传递参数给该信号。
- *
- * SlotFuncTypeName 信号函数的类型名称，比如T_pnrv
- * signalName 信号名称
- * ...  代表要传递给该信号的参数
- */
 #define EMIT_SIGNAL_EX(SlotFuncTypeName, signalName, ...)   \
 { \
     for(SIGNAL_TYPE(SlotFuncTypeName)::iterator it = m_##signalName.begin(); it != m_##signalName.end(); ++it) \
@@ -72,19 +58,11 @@ private: SIGNAL_TYPE(SlotFuncTypeName) m_##signalName;
         (*(it->m_slot))(it->m_receiver, __VA_ARGS__); \
     } \
 }
-
-/**
- * @def 发射一个函数类型名称为SlotFuncTypeName，函数名称为signalName的信号。不可以传递参数给该信号。
- *
- * SlotFuncTypeName 信号函数的类型名称，比如T_pnrv
- * signalName 信号名称
- * ...  代表要传递给该信号的参数
- */
 #define EMIT_SIGNAL(SlotFuncTypeName, signalName) \
 { \
     for(SIGNAL_TYPE(SlotFuncTypeName)::iterator it = m_##signalName.begin(); it != m_##signalName.end(); ++it) \
     { \
-        (*(it->m_slot))(it->m_receiver); \
+        (*(SlotFuncTypeName)(it->m_slot))(it->m_receiver); \
     } \
 }
 
@@ -117,32 +95,32 @@ public:
     GObject( const GObject & src);
     GObject & operator=(const GObject & src);
     virtual ~GObject();
-
-	/**
-	 * @brief 将信号连接到槽。\n
-	 * SlotFuncType是槽函数的函数类型名称。
-	 *
-	 * @param sender 指向发射者的指针
-	 * @param signal 指向信号的指针。
-	 * @param receiver 指向接收者的指针
-	 * @param slot 指向槽函数的指针
-	 *
-	 * @return 0代表成功；非0代表失败
-	 */
+ 
+    /**
+     * @brief 将信号连接到槽。\n
+     * SlotFuncType是槽函数的函数类型名称。
+     *
+     * @param sender 指向发射者的指针
+     * @param signal 指向信号的指针。
+     * @param receiver 指向接收者的指针
+     * @param slot 指向槽函数的指针
+     *
+     * @return 0代表成功；非0代表失败
+     */
     template<class SlotFuncType>
     static int  connect(GObject* sender, SIGNAL_POINTER(SlotFuncType) signal, GObject* receiver, SlotFuncType slot);
-
+    
     /**
-	 * @brief 将信号和槽断开连接。\n
-	 * SlotFuncType是槽函数的函数类型名称。
-	 *
-	 * @param sender 指向发射者的指针
-	 * @param signal 指向信号的指针。
-	 * @param receiver 指向接收者的指针
-	 * @param slot 指向槽函数的指针
-	 *
-	 * @return 0代表成功；非0代表失败
-	 */
+     * @brief 将信号和槽断开连接。\n
+     * SlotFuncType是槽函数的函数类型名称。
+     *
+     * @param sender 指向发射者的指针
+     * @param signal 指向信号的指针。
+     * @param receiver 指向接收者的指针
+     * @param slot 指向槽函数的指针
+     *
+     * @return 0代表成功；非0代表失败
+     */
     template<class SlotFuncType>
     static int  disconnect(GObject* sender, SIGNAL_POINTER(SlotFuncType) signal, GObject* receiver, SlotFuncType slot);
 
