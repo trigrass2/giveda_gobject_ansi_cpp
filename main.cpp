@@ -120,18 +120,18 @@ int main(int argc, char** argv)
     printf("before connect\n");
     
     Receiver *r = new Receiver;
-    GObject::connect<T_pnrv>(s, s->onClick(), r, Receiver::slotOnClick);
-    GObject::connect<Sender::notifyType>(s, s->notify(), r, Receiver::slotOnNotify);
+    GObject::connect(s, s->onClick(), r, Receiver::slotOnClick);
+    GObject::connect(s, s->notify(), r, Receiver::slotOnNotify);
     printf("after connect\n");
     s->sendMsg();
     
-    GObject::disconnect<T_pnrv>(s, s->onClick(), r, Receiver::slotOnClick);
-    GObject::disconnect<Sender::notifyType>(s, s->notify(), r, Receiver::slotOnNotify);
+    GObject::disconnect(s, s->onClick(), r, Receiver::slotOnClick);
+    GObject::disconnect(s, s->notify(), r, Receiver::slotOnNotify);
     printf("after disconnect\n");
     s->sendMsg();
     
-    GObject::connect<T_pnrv>(s, s->onClick(), r, Receiver::slotOnClick);
-    GObject::connect<Sender::notifyType>(s, s->notify(), r, Receiver::slotOnNotify);
+    GObject::connect(s, s->onClick(), r, Receiver::slotOnClick);
+    GObject::connect(s, s->notify(), r, Receiver::slotOnNotify);
     delete r;
     printf("connect again, and delete receiver\n");
     s->sendMsg();
