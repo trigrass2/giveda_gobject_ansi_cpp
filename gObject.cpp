@@ -68,7 +68,7 @@ GObject::~GObject()
 {
     destructAsReceiver();
 
-	EMIT_SIGNAL(T_pnrv, sigDestroyed);
+    EMIT_SIGNAL(T_pnrv, sigDestroyed);
     destructAsSender();
     
     delete m_priv;
