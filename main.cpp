@@ -43,11 +43,11 @@ class Sender : public GObject
     /**
      * @brief 定义一个函数类型为notifyType、函数名称为notify的信号。 
      *
-     * @param void (*notifyType)( GObject*p, float ) 完整的函数类型定义
+     * @param void (*notifyType)( GObject*p, string ) 完整的函数类型定义
      * @param notifyType 完整函数类型定义中的类型名称
      * @param notify 信号名称
      */
-    DEFINE_SIGNAL_EX(void (*notifyType)( GObject*p, float ), notifyType,  notify)
+    DEFINE_SIGNAL_EX(void (*notifyType)( GObject*p, string ), notifyType,  notify)
 public:
     Sender()
     :GObject()
@@ -61,7 +61,9 @@ public:
     void sendMsg()
     {
         EMIT_SIGNAL(T_pnrv, onClick);
-        EMIT_SIGNAL_EX(notifyType, notify,  10.01);
+
+		string param="giveda.com";
+        EMIT_SIGNAL_EX(notifyType, notify, param);
     }
 };
 
@@ -96,7 +98,7 @@ public slots:
      * @param p 指向Receiver的指针。
      * @param para Sender发射notify信号时，附带的参数。
      */
-    static void slotOnNotify(GObject* p, float para)
+    static void slotOnNotify(GObject* p, string para)
     {
         Receiver *r = (Receiver*)p;
         r->doSth2(para);
@@ -107,17 +109,17 @@ private:
         printf("I've got sender's onClick signal\n");
     }
 
-    void doSth2(float para)
+    void doSth2(string para)
     {
-        printf("I've got sender's notify signal, para is [%f]\n", para);
+        printf("I've got sender's notify signal, content is [%s]\n", para.c_str() );
     }
 };
 
 int main(int argc, char** argv)
 {
     Sender* s = new Sender;
-    s->sendMsg();
     printf("before connect\n");
+    s->sendMsg();
     
     Receiver *r = new Receiver;
     GObject::connect(s, s->onClick(), r, Receiver::slotOnClick);

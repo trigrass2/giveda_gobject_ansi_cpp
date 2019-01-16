@@ -87,6 +87,8 @@ struct Slot
 
 class  GObject
 {    
+    DEFINE_SIGNAL(T_pnrv, sigDestroyed)
+
 private:
     GObjectPrivate *m_priv;
 

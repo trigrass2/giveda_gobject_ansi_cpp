@@ -66,9 +66,10 @@ GObject::GObject ( GObject *p,  const char *n )
 
 GObject::~GObject()
 {
-    destructAsSender();
-
     destructAsReceiver();
+
+	EMIT_SIGNAL(T_pnrv, sigDestroyed);
+    destructAsSender();
     
     delete m_priv;
 }
