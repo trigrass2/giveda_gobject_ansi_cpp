@@ -41,20 +41,20 @@ class GObjectPrivate
 public:
     GObjectPrivate ( GObject *p, const char* nm ) :m_parent ( p ), strName ( nm ) 
     {
-        spLstInReceiver.clear();
-        receiverLstInSender.clear();
+        spLst.clear();
+        rLst.clear();
     }
 
     ~GObjectPrivate()
     {
-        spLstInReceiver.clear();
-        receiverLstInSender.clear();
+        spLst.clear();
+        rLst.clear();
     }
 
     GObject *m_parent;
     string   strName;
-    list<SenderPair>  spLstInReceiver;
-    list<GObject*>  receiverLstInSender;
+    list<SenderPair>  spLst;
+    list<GObject*>  rLst;
 };
 
 #define WARNING printf
@@ -77,12 +77,12 @@ GObject::~GObject()
 void GObject::saveSenderPair(GObject* sender, SIGNAL_POINTER(void*) signal)
 {
     SenderPair sp(sender, signal);
-    m_priv->spLstInReceiver.push_back(sp);
+    m_priv->spLst.push_back(sp);
 }
 
 void GObject::deleteSenderPair(GObject* sender, SIGNAL_POINTER(void*) signal)
 {
-    m_priv->spLstInReceiver.remove( SenderPair(sender, signal) );
+    m_priv->spLst.remove( SenderPair(sender, signal) );
 }
 
 class Receiver_Is
@@ -137,11 +137,11 @@ int GObject::privConnect(GObject* sender, SIGNAL_POINTER(void*) signal, GObject*
 
 void GObject::destructAsReceiver()
 {
-    list<SenderPair >::iterator it = m_priv->spLstInReceiver.begin();
-    while(it != m_priv->spLstInReceiver.end() )
+    list<SenderPair >::iterator it = m_priv->spLst.begin();
+    while(it != m_priv->spLst.end() )
     {
         it->signal->remove_if( Receiver_Is(this) );
-        it->sender->m_priv->receiverLstInSender.remove_if( Receiver_Is(this) );
+        it->sender->m_priv->rLst.remove_if( Receiver_Is(this) );
         ++it;
     }
 }
@@ -165,29 +165,29 @@ public:
 
 void GObject::destructAsSender()
 {
-    list<GObject*>::iterator it = m_priv->receiverLstInSender.begin();
-    while(it != m_priv->receiverLstInSender.end() )
+    list<GObject*>::iterator it = m_priv->rLst.begin();
+    while(it != m_priv->rLst.end() )
     {
         GObject* receiver = *it;
-        receiver->m_priv->spLstInReceiver.remove_if( Sender_Is(this) );
+        receiver->m_priv->spLst.remove_if( Sender_Is(this) );
         ++it;
     }
 }
 
 void GObject::saveReceiver(GObject *receiver)
 {
-    m_priv->receiverLstInSender.push_back( receiver );
+    m_priv->rLst.push_back( receiver );
 }
 
 void GObject::deleteReceiver(GObject *receiver)
 {
-    list<GObject*>::iterator it = std::find(m_priv->receiverLstInSender.begin(), m_priv->receiverLstInSender.end(), receiver );
-    if(it == m_priv->receiverLstInSender.end() )
+    list<GObject*>::iterator it = std::find(m_priv->rLst.begin(), m_priv->rLst.end(), receiver );
+    if(it == m_priv->rLst.end() )
     {
         return ;
     }
 
-    m_priv->receiverLstInSender.erase(it);
+    m_priv->rLst.erase(it);
 }
 
 int GObject::privDisconnect(GObject* sender, SIGNAL_POINTER(void*) signal, GObject* receiver, void* slot)
