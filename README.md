@@ -2,6 +2,7 @@
 请到 http://giveda.com/ 下载最新开源代码。
 
 # 授权协议
+[![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)   
 作为用户的您需要认真阅读如下软件授权协议，知情您的权利与义务：  
 *) 如果您需要将“Giveda®信号槽”用于个人私下的研究学习用途，您需要事先接受、并全程遵守AGPL v3许可证协议，否则将为自己带去信用与法律风险。  
 *) 如果您需要将“Giveda®信号槽”用于任何商业用途，您需要事先从深圳技达®获得商业应用许可，否则将为自己带去信用与法律风险。  
