@@ -1,5 +1,5 @@
 # 如何获取最新版本
-请到 http://giveda.com/ 下载最新开源代码。
+这里早已不再更新，请到 http://giveda.com/ 下载最新开源代码。
 
 # 授权协议
 [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)   
